@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,6 @@ export default async function GroupPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
   if (!user) {
     return redirect("/sign-in");
   }
@@ -30,7 +29,7 @@ export default async function GroupPage({
   });
 
   if (!group) {
-    return redirect("/groups");
+    notFound();
   }
 
   // Check if user is part of the group
@@ -63,7 +62,7 @@ export default async function GroupPage({
             <StartGameButton groupId={group.id} />
           )}
           <Button asChild variant="outline">
-            <Link href="/groups">Back to Groups</Link>
+            <Link href="/">Back to Home</Link>
           </Button>
         </div>
       </div>
