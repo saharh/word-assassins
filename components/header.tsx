@@ -55,9 +55,7 @@ export default async function Header() {
         {/* Logo section */}
         <a href="/" className="flex items-center gap-2 hover:opacity-90">
           <Crosshair className="w-6 h-6 text-primary" />
-          <span className="font-bold text-lg hidden sm:block">
-            Word Assassins
-          </span>
+          <span className="font-bold text-lg">Word Assassins</span>
         </a>
 
         {/* Desktop Navigation */}
