@@ -36,7 +36,7 @@ export default function LandingPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="flex-1 flex flex-col items-center justify-center space-y-10 py-20 text-center"
+        className="flex-1 flex flex-col items-center justify-center space-y-10 text-center min-h-[calc(60vh)]"
       >
         <div className="space-y-6 max-w-4xl">
           <motion.h1
