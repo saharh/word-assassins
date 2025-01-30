@@ -9,7 +9,7 @@ export async function Footer() {
   return (
     <footer className="w-full border-t bg-background">
       <div className="container flex flex-col items-center gap-2 py-4 text-sm text-muted-foreground">
-        <p className="flex items-center gap-1">
+        <p className="flex items-center gap-1 text-center">
           Made with <Heart className="h-4 w-4 fill-current text-red-500" /> by{" "}
           <Link
             href="https://github.com/ayush-goyal"
@@ -21,7 +21,7 @@ export async function Footer() {
           </Link>{" "}
           in NYC
         </p>
-        <div className="flex items-center">
+        <div className="flex items-center text-center">
           <p>© {currentYear} Glacier Labs. All rights reserved.</p>
         </div>
       </div>
