@@ -9,7 +9,11 @@ import { GameStatusBadge } from "@/components/game-status-badge";
 import MarkAsKilledButton from "./mark-as-killed-button";
 import { AnimatedCrown } from "./animated-crown";
 
-export default async function GamePage({ params }: { params: { id: string } }) {
+export default async function GamePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -17,10 +21,11 @@ export default async function GamePage({ params }: { params: { id: string } }) {
   if (!user) {
     return redirect("/sign-in");
   }
+  const { id } = await params;
 
   const game = await prisma.game.findUnique({
     where: {
-      id: params.id,
+      id,
       players: {
         some: {
           userId: user.id,

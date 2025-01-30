@@ -5,7 +5,7 @@ import { GameStatus, PlayerStatus } from "@prisma/client";
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
   const {
@@ -21,12 +21,14 @@ export async function POST(
     );
   }
 
+  const { id } = await params;
+
   try {
     const dyingPlayer = await prisma.playerInGame.findUnique({
       where: {
         userId_gameId: {
           userId: user.id,
-          gameId: params.id,
+          gameId: id,
         },
       },
       include: {
