@@ -77,7 +77,7 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.2 }}
-        className="py-16"
+        className="py-8 sm:py-16"
       >
         <motion.h2
           initial={{ opacity: 0 }}
@@ -137,7 +137,7 @@ export default function LandingPage() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-200px" }}
         transition={{ duration: 0.8 }}
-        className="py-16 mb-20"
+        className="py-16 mb-6 sm:mb-20"
       >
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
