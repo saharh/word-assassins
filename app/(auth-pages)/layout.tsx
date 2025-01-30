@@ -16,7 +16,7 @@ export default async function Layout({
   }
 
   return (
-    <div className="min-h-[100vh] w-full flex items-center justify-center">
+    <div className="min-h-[90vh] w-full flex flex-1 items-center justify-center">
       {children}
     </div>
   );
