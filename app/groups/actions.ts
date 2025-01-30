@@ -2,12 +2,13 @@
 
 import { redirect } from "next/navigation";
 
-export async function createGroup(formData: FormData) {
-  const name = formData.get("groupName")?.toString();
+export async function createGame(formData: FormData) {
+  const name = formData.get("gameName")?.toString();
+  const playerName = formData.get("playerName")?.toString();
 
-  const response = await fetch("/api/groups", {
+  const response = await fetch("/api/games", {
     method: "POST",
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, playerName }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -16,18 +17,19 @@ export async function createGroup(formData: FormData) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || "Failed to create group");
+    throw new Error(data.error || "Failed to create game");
   }
 
-  redirect(`/groups/${data.id}`);
+  redirect(`/games/${data.id}`);
 }
 
-export async function joinGroup(formData: FormData) {
+export async function joinGame(formData: FormData) {
   const joinCode = formData.get("joinCode")?.toString();
+  const playerName = formData.get("playerName")?.toString();
 
-  const response = await fetch("/api/groups/join", {
+  const response = await fetch("/api/games/join", {
     method: "POST",
-    body: JSON.stringify({ joinCode }),
+    body: JSON.stringify({ joinCode, playerName }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -36,14 +38,14 @@ export async function joinGroup(formData: FormData) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || "Failed to join group");
+    throw new Error(data.error || "Failed to join game");
   }
 
-  redirect(`/groups/${data.group.id}`);
+  redirect(`/games/${data.game.id}`);
 }
 
-export async function startGame(groupId: string) {
-  const response = await fetch(`/api/groups/${groupId}/start`, {
+export async function startGame(gameId: string) {
+  const response = await fetch(`/api/games/${gameId}/start`, {
     method: "POST",
   });
 

@@ -1,7 +1,10 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
-import { nanoid } from "nanoid";
 import { prisma } from "@/lib/db";
+import { customAlphabet } from "nanoid";
+
+const CUSTOM_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Letters + Numbers
+const generateGameCode = customAlphabet(CUSTOM_ALPHABET, 4);
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -17,23 +20,31 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { name } = await request.json();
+    const { name, playerName } = await request.json();
 
     if (!name) {
       return NextResponse.json(
-        { error: "Group name is required" },
+        { error: "Game name is required" },
         { status: 400 }
       );
     }
 
-    const group = await prisma.group.create({
+    if (!playerName) {
+      return NextResponse.json(
+        { error: "Player name is required" },
+        { status: 400 }
+      );
+    }
+
+    const game = await prisma.game.create({
       data: {
         name,
-        joinCode: nanoid(6),
+        joinCode: generateGameCode(),
         creatorId: user.id,
         players: {
           create: {
             userId: user.id,
+            name: playerName,
           },
         },
       },
@@ -42,11 +53,11 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(group);
+    return NextResponse.json(game);
   } catch (error) {
-    console.error("Error creating group:", error);
+    console.error("Error creating game:", error);
     return NextResponse.json(
-      { error: "Failed to create group" },
+      { error: "Failed to create game" },
       { status: 500 }
     );
   }

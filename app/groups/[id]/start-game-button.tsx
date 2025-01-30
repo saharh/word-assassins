@@ -6,14 +6,14 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-export default function StartGameButton({ groupId }: { groupId: string }) {
+export default function StartGameButton({ gameId }: { gameId: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   async function handleStartGame() {
     setIsLoading(true);
     try {
-      await startGame(groupId);
+      await startGame(gameId);
       toast({
         title: "Game started!",
         description: "The game has been started successfully.",

@@ -13,7 +13,7 @@ enum PlayerStatus {
   DEAD
 }
 
-model Group {
+model Game {
   id        String         @id @default(cuid())
   name      String
   joinCode  String         @unique
@@ -27,15 +27,16 @@ model Group {
 model PlayerInGame {
   id         String        @id @default(cuid())
   userId     String
-  groupId    String
-  group      Group         @relation(fields: [groupId], references: [id])
+  name       String
+  gameId    String
+  game      Game         @relation(fields: [gameId], references: [id])
   status     PlayerStatus  @default(ALIVE)
   word       String?
-  targetId   String?       @unique
+  targetId   String?
   target     PlayerInGame? @relation("PlayerTarget", fields: [targetId], references: [id])
-  targetedBy PlayerInGame? @relation("PlayerTarget")
+  targetedBy PlayerInGame[] @relation("PlayerTarget")
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 
-  @@unique([userId, groupId])
+  @@unique([userId, gameId])
 }

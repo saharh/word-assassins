@@ -1,4 +1,4 @@
-import HeaderAuth from "@/components/header-auth";
+import HeaderAuth from "@/components/header";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";

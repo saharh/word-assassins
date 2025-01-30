@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -10,64 +10,76 @@ export async function POST(request: Request) {
 
   if (!user) {
     return NextResponse.json(
-      { error: "You must be logged in" },
-      { status: 401 }
+      { error: "Unauthorized" },
+      {
+        status: 401,
+      }
     );
   }
 
   try {
-    const { joinCode } = await request.json();
+    const { code } = await request.json();
 
-    if (!joinCode) {
+    if (!code) {
       return NextResponse.json(
         { error: "Join code is required" },
-        { status: 400 }
+        {
+          status: 400,
+        }
       );
     }
 
-    const group = await prisma.group.findUnique({
-      where: { joinCode },
+    const game = await prisma.game.findUnique({
+      where: {
+        joinCode: code,
+      },
     });
 
-    if (!group) {
+    if (!game) {
       return NextResponse.json(
-        { error: "Invalid group code" },
-        { status: 404 }
+        { error: "Invalid game code" },
+        {
+          status: 404,
+        }
       );
     }
 
-    // Check if user is already in the group
+    // Check if user is already in the game
     const existingPlayer = await prisma.playerInGame.findUnique({
       where: {
-        userId_groupId: {
+        userId_gameId: {
           userId: user.id,
-          groupId: group.id,
+          gameId: game.id,
         },
       },
     });
 
     if (existingPlayer) {
       return NextResponse.json(
-        { error: "You are already in this group" },
-        { status: 400 }
+        { error: "You are already in this game" },
+        {
+          status: 400,
+        }
       );
     }
 
-    // Add user to the group
+    // Add user to the game
     const player = await prisma.playerInGame.create({
       data: {
         userId: user.id,
-        groupId: group.id,
-        word: "temporary", // You'll need to implement word assignment logic
+        name: playerName,
+        gameId: game.id,
       },
     });
 
-    return NextResponse.json({ group, player });
+    return NextResponse.json({ game, player });
   } catch (error) {
-    console.error("Error joining group:", error);
+    console.error("Error joining game:", error);
     return NextResponse.json(
-      { error: "Failed to join group" },
-      { status: 500 }
+      { error: "Failed to join game" },
+      {
+        status: 500,
+      }
     );
   }
 }

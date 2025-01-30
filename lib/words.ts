@@ -22,19 +22,13 @@ export function assignTargets<T>(items: T[]): Map<T, T> {
     throw new Error("Need at least 2 items to create a cycle");
   }
 
-  // Create a copy and shuffle it
-  const shuffled = [...items];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-
-  // Create the cycle mapping
+  const shuffled = _.shuffle(items);
   const targetMap = new Map<T, T>();
-  for (let i = 0; i < shuffled.length; i++) {
-    const nextIndex = (i + 1) % shuffled.length;
-    targetMap.set(shuffled[i], shuffled[nextIndex]);
-  }
+
+  _.forEach(shuffled, (item, index) => {
+    const nextIndex = (index + 1) % shuffled.length;
+    targetMap.set(item, shuffled[nextIndex]);
+  });
 
   return targetMap;
 }

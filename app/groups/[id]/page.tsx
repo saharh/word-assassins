@@ -8,11 +8,7 @@ import Link from "next/link";
 import StartGameButton from "./start-game-button";
 import { PlayerStatus } from "@prisma/client";
 
-export default async function GroupPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function GamePage({ params }: { params: { id: string } }) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,27 +17,26 @@ export default async function GroupPage({
     return redirect("/sign-in");
   }
 
-  const group = await prisma.group.findUnique({
-    where: { id: params.id },
+  const game = await prisma.game.findUnique({
+    where: {
+      id: params.id,
+      players: {
+        some: {
+          userId: user.id,
+        },
+      },
+    },
     include: {
       players: true,
     },
   });
 
-  if (!group) {
+  if (!game) {
     notFound();
   }
 
-  // Check if user is part of the group
-  const isUserInGroup = group.players.some(
-    (player) => player.userId === user.id
-  );
-  if (!isUserInGroup) {
-    return redirect("/groups");
-  }
-
-  const isCreator = group.creatorId === user.id;
-  const currentPlayer = group.players.find(
+  const isCreator = game.creatorId === user.id;
+  const currentPlayer = game.players.find(
     (player) => player.userId === user.id
   );
 
@@ -50,49 +45,44 @@ export default async function GroupPage({
       <div className="flex justify-between items-center">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold">{group.name}</h1>
-            <Badge variant={group.isActive ? "default" : "secondary"}>
-              {group.isActive ? "Active" : "Waiting to Start"}
+            <h1 className="text-3xl font-bold">{game.name}</h1>
+            <Badge variant={game.isActive ? "default" : "secondary"}>
+              {game.isActive ? "Active" : "Waiting to Start"}
             </Badge>
           </div>
-          <p className="text-muted-foreground">Join Code: {group.joinCode}</p>
+          <p className="text-muted-foreground">Join Code: {game.joinCode}</p>
         </div>
         <div className="flex gap-3">
-          {isCreator && !group.isActive && (
-            <StartGameButton groupId={group.id} />
-          )}
-          <Button asChild variant="outline">
-            <Link href="/">Back to Home</Link>
-          </Button>
+          {isCreator && !game.isActive && <StartGameButton gameId={game.id} />}
         </div>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex justify-between">
-            <span>Group Members</span>
+            <span>Game Members</span>
             <Badge variant="outline">
-              {group.players.length}{" "}
-              {group.players.length === 1 ? "Player" : "Players"}
+              {game.players.length}{" "}
+              {game.players.length === 1 ? "Player" : "Players"}
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {group.players.map((player) => (
+            {game.players.map((player) => (
               <div
                 key={player.id}
                 className="flex items-center justify-between p-4 border rounded-lg"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-medium">{player.userId}</p>
-                    {player.userId === group.creatorId && (
+                    <p className="font-medium">{player.name}</p>
+                    {player.userId === game.creatorId && (
                       <Badge variant="secondary" className="text-xs">
                         Creator
                       </Badge>
                     )}
-                    {group.isActive && (
+                    {game.isActive && (
                       <Badge
                         variant={
                           player.status === PlayerStatus.ALIVE
@@ -105,20 +95,20 @@ export default async function GroupPage({
                       </Badge>
                     )}
                   </div>
-                  {group.isActive && player.userId === user.id && (
+                  {game.isActive && player.userId === user.id && (
                     <p className="text-sm text-muted-foreground">
                       Your word: {player.word}
                     </p>
                   )}
                 </div>
-                {group.isActive &&
+                {game.isActive &&
                   currentPlayer?.status === "ALIVE" &&
                   player.userId === user.id &&
                   player.targetId && (
                     <div className="text-sm text-muted-foreground">
                       Target:{" "}
                       {
-                        group.players.find((p) => p.id === player.targetId)
+                        game.players.find((p) => p.id === player.targetId)
                           ?.userId
                       }
                     </div>

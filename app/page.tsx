@@ -1,85 +1,111 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { createGroup, joinGroup } from "./groups/actions";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/utils/supabase/server";
+import { DateTime } from "luxon";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/db";
+import { Bell, Plus, LogIn } from "lucide-react";
 
-export default async function GroupsPage() {
+async function getGames(userId: string) {
+  return await prisma.game.findMany({
+    where: {
+      players: {
+        some: {
+          userId: userId,
+        },
+      },
+    },
+    include: {
+      players: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
+export default async function DashboardPage({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return redirect("/sign-in");
+    redirect("/sign-in");
   }
 
+  const games = await getGames(user.id);
+
   return (
-    <div className="flex-1 w-full max-w-3xl mx-auto p-4 space-y-8">
-      <h1 className="text-3xl font-bold">Groups</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Join Group Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Join a Group</CardTitle>
-            <CardDescription>
-              Enter a group code to join an existing group
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form action={joinGroup} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="joinCode">Group Code</Label>
-                <Input
-                  id="joinCode"
-                  name="joinCode"
-                  placeholder="Enter group code"
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Join Group
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Create Group Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Create a Group</CardTitle>
-            <CardDescription>
-              Start a new group and invite others
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form action={createGroup} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="groupName">Group Name</Label>
-                <Input
-                  id="groupName"
-                  name="groupName"
-                  placeholder="Enter group name"
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Create Group
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+    <div className="container mx-auto py-10">
+      <div className="flex items-center mb-8">
+        <h1 className="text-4xl font-bold">Your Games</h1>
       </div>
+
+      {games.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 px-4">
+          <h2 className="text-2xl font-bold text-center mb-4">No Games Yet!</h2>
+          <p className="text-muted-foreground text-center max-w-md mb-8">
+            Start your first game of Word Assassin! Create a new game and invite
+            your friends to join the fun.
+          </p>
+          <div className="space-y-4">
+            <Button size="lg" asChild className="w-full">
+              <Link href="/games/new" className="gap-2">
+                <Plus className="w-5 h-5" />
+                Create Your First Game
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild className="w-full">
+              <Link href="/games/join" className="gap-2">
+                <LogIn className="w-5 h-5" />
+                Join an Existing Game
+              </Link>
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {games.map((game) => (
+            <Link href={`/games/${game.id}`} key={game.id}>
+              <Card className="hover:bg-accent transition-colors">
+                <CardHeader>
+                  <CardTitle>{game.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Status:</span>
+                      <span className="font-medium">
+                        {game.isActive ? "In Progress" : "Waiting"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Players:</span>
+                      <span className="font-medium">{game.players.length}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Created:</span>
+                      <span className="font-medium">
+                        {DateTime.fromJSDate(
+                          new Date(game.createdAt)
+                        ).toRelative()}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {children}
     </div>
   );
 }
