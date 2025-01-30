@@ -26,7 +26,7 @@ export default async function Signup(props: {
   }
 
   return (
-    <div className="w-full sm:w-[350px] mx-auto">
+    <div className="w-full mx-4 max-w-md">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
