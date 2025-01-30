@@ -1,4 +1,7 @@
-import { signInAction } from "@/app/(auth-pages)/actions";
+import {
+  signInAction,
+  signInWithGoogleAction,
+} from "@/app/(auth-pages)/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
@@ -55,9 +58,14 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
             >
               Sign in
             </SubmitButton>
-            <Button variant="outline" className="w-full" type="button">
+            <SubmitButton
+              className="w-full"
+              variant="outline"
+              pendingText="Redirecting to Google..."
+              formAction={signInWithGoogleAction}
+            >
               Sign in with Google
-            </Button>
+            </SubmitButton>
             <FormMessage message={searchParams} />
           </form>
         </CardContent>
