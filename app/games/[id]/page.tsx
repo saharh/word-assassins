@@ -68,39 +68,41 @@ export default async function GamePage({
         </div>
       </div>
 
-      {game.status === GameStatus.ACTIVE && currentPlayer?.target && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Target</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-1">
-                  <p className="font-medium">{currentPlayer.target.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Their word:{" "}
-                    <span className="font-bold">
-                      {currentPlayer.target.word}
-                    </span>
-                  </p>
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                  <Badge
-                    variant={
-                      currentPlayer.target.status === PlayerStatus.ALIVE
-                        ? "default"
-                        : "destructive"
-                    }
-                  >
-                    {currentPlayer.target.status}
-                  </Badge>
+      {game.status === GameStatus.ACTIVE &&
+        currentPlayer?.target &&
+        currentPlayer.target.status === PlayerStatus.ALIVE && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Target</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="space-y-1">
+                    <p className="font-medium">{currentPlayer.target.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Their word:{" "}
+                      <span className="font-bold">
+                        {currentPlayer.target.word}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <Badge
+                      variant={
+                        currentPlayer.target.status === PlayerStatus.ALIVE
+                          ? "default"
+                          : "destructive"
+                      }
+                    >
+                      {currentPlayer.target.status}
+                    </Badge>
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+            </CardContent>
+          </Card>
+        )}
 
       {game.status === GameStatus.ACTIVE &&
         currentPlayer?.status === PlayerStatus.ALIVE && (

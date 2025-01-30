@@ -82,7 +82,7 @@ export async function POST(
       // Mark the dying player as dead
       await tx.playerInGame.update({
         where: { id: dyingPlayer.id },
-        data: { status: PlayerStatus.DEAD },
+        data: { status: PlayerStatus.DEAD, targetId: null },
       });
 
       // If the dying player's target would be the killer, they're the last one standing
