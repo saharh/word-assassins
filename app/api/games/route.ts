@@ -20,9 +20,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { name, playerName } = await request.json();
+    const { gameName, playerName } = await request.json();
 
-    if (!name) {
+    if (!gameName) {
       return NextResponse.json(
         { error: "Game name is required" },
         { status: 400 }
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
 
     const game = await prisma.game.create({
       data: {
-        name,
+        name: gameName,
         joinCode: generateGameCode(),
         creatorId: user.id,
         players: {

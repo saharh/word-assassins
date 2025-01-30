@@ -5,7 +5,28 @@ import { DateTime } from "luxon";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { Bell, Plus, LogIn } from "lucide-react";
+import { Bell, Plus, LogIn, Users, Calendar, PlayCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { GameStatus } from "@prisma/client";
+
+function GameButtons() {
+  return (
+    <div className="space-y-4">
+      <Button size="lg" asChild className="w-full">
+        <Link href="/games/new" className="gap-2">
+          <Plus className="w-5 h-5" />
+          Create a game
+        </Link>
+      </Button>
+      <Button variant="outline" size="lg" asChild className="w-full">
+        <Link href="/games/join" className="gap-2">
+          <LogIn className="w-5 h-5" />
+          Join a game
+        </Link>
+      </Button>
+    </div>
+  );
+}
 
 async function getGames(userId: string) {
   return await prisma.game.findMany({
@@ -54,55 +75,71 @@ export default async function DashboardPage({
             Start your first game of Word Assassin! Create a new game and invite
             your friends to join the fun.
           </p>
-          <div className="space-y-4">
-            <Button size="lg" asChild className="w-full">
-              <Link href="/games/new" className="gap-2">
-                <Plus className="w-5 h-5" />
-                Create Your First Game
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild className="w-full">
-              <Link href="/games/join" className="gap-2">
-                <LogIn className="w-5 h-5" />
-                Join an Existing Game
-              </Link>
-            </Button>
+          <div className="max-w-md w-full">
+            <GameButtons />
           </div>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {games.map((game) => (
-            <Link href={`/games/${game.id}`} key={game.id}>
-              <Card className="hover:bg-accent transition-colors">
-                <CardHeader>
-                  <CardTitle>{game.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Status:</span>
-                      <span className="font-medium">
-                        {game.isActive ? "In Progress" : "Waiting"}
-                      </span>
+        <>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {games.map((game) => (
+              <Link href={`/games/${game.id}`} key={game.id}>
+                <Card className="hover:bg-accent transition-colors">
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <span>{game.name}</span>
+                      <Badge
+                        variant={
+                          game.status === GameStatus.ACTIVE
+                            ? "secondary"
+                            : "outline"
+                        }
+                        className="ml-2"
+                      >
+                        {game.status}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Players:</span>
+                        <span className="font-medium">
+                          {game.players.length}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <Calendar className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-muted-foreground">Created:</span>
+                        <span className="font-medium">
+                          {(() => {
+                            const dt = DateTime.fromJSDate(
+                              new Date(game.createdAt)
+                            );
+                            const now = DateTime.now();
+                            if (dt.hasSame(now, "day")) {
+                              return "Today";
+                            } else if (
+                              dt.hasSame(now.minus({ days: 1 }), "day")
+                            ) {
+                              return "Yesterday";
+                            } else {
+                              return dt.toFormat("LLL d, yyyy");
+                            }
+                          })()}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Players:</span>
-                      <span className="font-medium">{game.players.length}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Created:</span>
-                      <span className="font-medium">
-                        {DateTime.fromJSDate(
-                          new Date(game.createdAt)
-                        ).toRelative()}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-12 max-w-md mx-auto">
+            <GameButtons />
+          </div>
+        </>
       )}
 
       {children}

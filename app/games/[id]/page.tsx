@@ -2,11 +2,10 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import StartGameButton from "./start-game-button";
-import { PlayerStatus } from "@prisma/client";
+import { GameStatus, PlayerStatus } from "@prisma/client";
+import { GameStatusBadge } from "@/components/game-status-badge";
 
 export default async function GamePage({ params }: { params: { id: string } }) {
   const supabase = await createClient();
@@ -27,7 +26,11 @@ export default async function GamePage({ params }: { params: { id: string } }) {
       },
     },
     include: {
-      players: true,
+      players: {
+        include: {
+          target: true,
+        },
+      },
     },
   });
 
@@ -46,16 +49,48 @@ export default async function GamePage({ params }: { params: { id: string } }) {
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold">{game.name}</h1>
-            <Badge variant={game.isActive ? "default" : "secondary"}>
-              {game.isActive ? "Active" : "Waiting to Start"}
-            </Badge>
+            <GameStatusBadge status={game.status} />
           </div>
           <p className="text-muted-foreground">Join Code: {game.joinCode}</p>
         </div>
         <div className="flex gap-3">
-          {isCreator && !game.isActive && <StartGameButton gameId={game.id} />}
+          {isCreator && game.status === GameStatus.WAITING && (
+            <StartGameButton gameId={game.id} />
+          )}
         </div>
       </div>
+
+      {game.status === GameStatus.ACTIVE && currentPlayer?.target && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Your Target</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="space-y-1">
+                  <p className="font-medium">{currentPlayer.target.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Their word:{" "}
+                    <span className="font-bold">
+                      {currentPlayer.target.word}
+                    </span>
+                  </p>
+                </div>
+                <Badge
+                  variant={
+                    currentPlayer.target.status === PlayerStatus.ALIVE
+                      ? "default"
+                      : "destructive"
+                  }
+                >
+                  {currentPlayer.target.status}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>
@@ -82,7 +117,7 @@ export default async function GamePage({ params }: { params: { id: string } }) {
                         Creator
                       </Badge>
                     )}
-                    {game.isActive && (
+                    {game.status === GameStatus.ACTIVE && (
                       <Badge
                         variant={
                           player.status === PlayerStatus.ALIVE
@@ -95,24 +130,7 @@ export default async function GamePage({ params }: { params: { id: string } }) {
                       </Badge>
                     )}
                   </div>
-                  {game.isActive && player.userId === user.id && (
-                    <p className="text-sm text-muted-foreground">
-                      Your word: {player.word}
-                    </p>
-                  )}
                 </div>
-                {game.isActive &&
-                  currentPlayer?.status === "ALIVE" &&
-                  player.userId === user.id &&
-                  player.targetId && (
-                    <div className="text-sm text-muted-foreground">
-                      Target:{" "}
-                      {
-                        game.players.find((p) => p.id === player.targetId)
-                          ?.userId
-                      }
-                    </div>
-                  )}
               </div>
             ))}
           </div>

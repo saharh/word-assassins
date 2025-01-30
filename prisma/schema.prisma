@@ -8,6 +8,12 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum GameStatus {
+  WAITING
+  ACTIVE
+  FINISHED
+}
+
 enum PlayerStatus {
   ALIVE
   DEAD
@@ -19,7 +25,7 @@ model Game {
   joinCode  String         @unique
   creatorId String
   players   PlayerInGame[]
-  isActive  Boolean        @default(false)
+  status    GameStatus     @default(WAITING)
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 }

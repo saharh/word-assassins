@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getRandomWords } from "@/lib/words";
+import { GameStatus } from "@prisma/client";
 
 export async function POST(
   request: Request,
@@ -41,7 +42,7 @@ export async function POST(
       );
     }
 
-    if (game.isActive) {
+    if (game.status !== GameStatus.WAITING) {
       return NextResponse.json(
         { error: "Game already started" },
         {
@@ -81,7 +82,7 @@ export async function POST(
       ...updates,
       prisma.game.update({
         where: { id: game.id },
-        data: { isActive: true },
+        data: { status: GameStatus.ACTIVE },
       }),
     ]);
 

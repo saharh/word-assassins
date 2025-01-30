@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { GameStatus } from "@prisma/client";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -18,11 +19,19 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { code } = await request.json();
+    const { joinCode, playerName } = await request.json();
 
-    if (!code) {
+    if (!joinCode) {
       return NextResponse.json(
         { error: "Join code is required" },
+        {
+          status: 400,
+        }
+      );
+    }
+    if (!playerName) {
+      return NextResponse.json(
+        { error: "Player name is required" },
         {
           status: 400,
         }
@@ -31,7 +40,10 @@ export async function POST(request: Request) {
 
     const game = await prisma.game.findUnique({
       where: {
-        joinCode: code,
+        joinCode,
+      },
+      include: {
+        players: true,
       },
     });
 
@@ -43,18 +55,15 @@ export async function POST(request: Request) {
         }
       );
     }
-
-    // Check if user is already in the game
-    const existingPlayer = await prisma.playerInGame.findUnique({
-      where: {
-        userId_gameId: {
-          userId: user.id,
-          gameId: game.id,
-        },
-      },
-    });
-
-    if (existingPlayer) {
+    if (game.status !== GameStatus.WAITING) {
+      return NextResponse.json(
+        { error: "Game is already active" },
+        {
+          status: 400,
+        }
+      );
+    }
+    if (game.players.some((player) => player.userId === user.id)) {
       return NextResponse.json(
         { error: "You are already in this game" },
         {
@@ -64,7 +73,7 @@ export async function POST(request: Request) {
     }
 
     // Add user to the game
-    const player = await prisma.playerInGame.create({
+    await prisma.playerInGame.create({
       data: {
         userId: user.id,
         name: playerName,
@@ -72,7 +81,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ game, player });
+    return NextResponse.json(game);
   } catch (error) {
     console.error("Error joining game:", error);
     return NextResponse.json(
