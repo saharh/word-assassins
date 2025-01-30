@@ -81,7 +81,11 @@ export default function JoinGamePage() {
                   <FormItem>
                     <FormLabel>Join Code</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter 4-digit code" {...field} />
+                      <Input
+                        placeholder="Enter 4-digit code"
+                        {...field}
+                        autoComplete="off"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -94,7 +98,11 @@ export default function JoinGamePage() {
                   <FormItem>
                     <FormLabel>Your Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your name" {...field} />
+                      <Input
+                        placeholder="Enter your name"
+                        {...field}
+                        autoComplete="off"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

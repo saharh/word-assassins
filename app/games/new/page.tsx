@@ -79,7 +79,11 @@ export default function CreateGamePage() {
                   <FormItem>
                     <FormLabel>Group Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter group name" {...field} />
+                      <Input
+                        placeholder="Enter group name"
+                        {...field}
+                        autoComplete="off"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -92,7 +96,11 @@ export default function CreateGamePage() {
                   <FormItem>
                     <FormLabel>Your Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your name" {...field} />
+                      <Input
+                        placeholder="Enter your name"
+                        {...field}
+                        autoComplete="off"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
