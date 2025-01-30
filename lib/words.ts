@@ -1,17 +1,5 @@
 import _ from "lodash";
-
-const WORD_LIST = [
-  "elephant",
-  "umbrella",
-  "rainbow",
-  "butterfly",
-  "mountain",
-  "octopus",
-  "penguin",
-  "volcano",
-  "dolphin",
-  "giraffe",
-];
+import { WORD_LIST } from "./master-word-list";
 
 export function getRandomWords(count: number): string[] {
   return _.shuffle(WORD_LIST).slice(0, count);
