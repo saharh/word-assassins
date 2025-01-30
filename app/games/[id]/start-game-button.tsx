@@ -19,6 +19,7 @@ export default function StartGameButton({ gameId }: { gameId: string }) {
         title: "Game started!",
         description: "The game has been started successfully.",
       });
+      window.location.reload();
     },
     onError: (error: any) => {
       toast({

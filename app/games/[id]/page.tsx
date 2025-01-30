@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import StartGameButton from "./start-game-button";
 import { GameStatus, PlayerStatus } from "@prisma/client";
 import { GameStatusBadge } from "@/components/game-status-badge";
+import MarkAsKilledButton from "./mark-as-killed-button";
+import { AnimatedCrown } from "./animated-crown";
 
 export default async function GamePage({ params }: { params: { id: string } }) {
   const supabase = await createClient();
@@ -29,6 +31,7 @@ export default async function GamePage({ params }: { params: { id: string } }) {
       players: {
         include: {
           target: true,
+          gameWinner: true,
         },
       },
     },
@@ -77,20 +80,34 @@ export default async function GamePage({ params }: { params: { id: string } }) {
                     </span>
                   </p>
                 </div>
-                <Badge
-                  variant={
-                    currentPlayer.target.status === PlayerStatus.ALIVE
-                      ? "default"
-                      : "destructive"
-                  }
-                >
-                  {currentPlayer.target.status}
-                </Badge>
+                <div className="flex flex-col items-end gap-2">
+                  <Badge
+                    variant={
+                      currentPlayer.target.status === PlayerStatus.ALIVE
+                        ? "default"
+                        : "destructive"
+                    }
+                  >
+                    {currentPlayer.target.status}
+                  </Badge>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
       )}
+
+      {game.status === GameStatus.ACTIVE &&
+        currentPlayer?.status === PlayerStatus.ALIVE && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <MarkAsKilledButton gameId={game.id} />
+            </CardContent>
+          </Card>
+        )}
 
       <Card>
         <CardHeader>
@@ -112,6 +129,7 @@ export default async function GamePage({ params }: { params: { id: string } }) {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <p className="font-medium">{player.name}</p>
+                    {player.gameWinner && <AnimatedCrown />}
                     {player.userId === game.creatorId && (
                       <Badge variant="secondary" className="text-xs">
                         Creator

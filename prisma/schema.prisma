@@ -24,25 +24,28 @@ model Game {
   name      String
   joinCode  String         @unique
   creatorId String
-  players   PlayerInGame[]
+  players   PlayerInGame[] @relation("GamePlayer")
   status    GameStatus     @default(WAITING)
+  winnerId  String?        @unique
+  winner    PlayerInGame?  @relation("GameWinner", fields: [winnerId], references: [id])
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 }
 
 model PlayerInGame {
-  id         String        @id @default(cuid())
+  id         String         @id @default(cuid())
   userId     String
   name       String
-  gameId    String
-  game      Game         @relation(fields: [gameId], references: [id])
-  status     PlayerStatus  @default(ALIVE)
+  gameId     String
+  game       Game           @relation("GamePlayer", fields: [gameId], references: [id])
+  gameWinner Game?          @relation("GameWinner")
+  status     PlayerStatus   @default(ALIVE)
   word       String?
   targetId   String?
-  target     PlayerInGame? @relation("PlayerTarget", fields: [targetId], references: [id])
+  target     PlayerInGame?  @relation("PlayerTarget", fields: [targetId], references: [id])
   targetedBy PlayerInGame[] @relation("PlayerTarget")
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
 
   @@unique([userId, gameId])
 }
