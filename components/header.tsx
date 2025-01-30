@@ -3,7 +3,7 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "./ui/button";
 import { ThemeSwitcher } from "./theme-switcher";
-import { Crosshair } from "lucide-react";
+import { Crosshair, LayoutDashboard, Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +11,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
 
 export default async function Header() {
   const supabase = await createClient();
@@ -33,10 +32,16 @@ export default async function Header() {
 
   const UserMenu = () => (
     <div className="flex items-center gap-4">
+      <Button asChild variant="ghost" size="sm" className="hidden md:flex">
+        <a href="/dashboard" className="flex items-center gap-2">
+          <LayoutDashboard className="h-4 w-4" />
+          <span>Dashboard</span>
+        </a>
+      </Button>
       <p className="text-sm text-muted-foreground hidden sm:block">
         {user?.email}
       </p>
-      <form action={signOutAction}>
+      <form action={signOutAction} className="hidden md:block">
         <Button type="submit" variant="outline" size="sm">
           Sign out
         </Button>
@@ -88,9 +93,48 @@ export default async function Header() {
                     Setup required
                   </Button>
                 ) : user ? (
-                  <UserMenu />
+                  <div className="flex flex-col gap-3">
+                    <div className="px-2">
+                      <p className="text-sm text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Button asChild variant="ghost" size="sm">
+                        <a
+                          href="/dashboard"
+                          className="flex items-center gap-2"
+                        >
+                          <LayoutDashboard className="h-4 w-4" />
+                          <span>Dashboard</span>
+                        </a>
+                      </Button>
+                      <form action={signOutAction}>
+                        <Button
+                          type="submit"
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                        >
+                          Sign out
+                        </Button>
+                      </form>
+                    </div>
+                  </div>
                 ) : (
-                  <AuthButtons />
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="w-full"
+                    >
+                      <a href="/sign-in">Sign in</a>
+                    </Button>
+                    <Button asChild size="sm" className="w-full">
+                      <a href="/sign-up">Sign up</a>
+                    </Button>
+                  </div>
                 )}
               </div>
             </SheetContent>
