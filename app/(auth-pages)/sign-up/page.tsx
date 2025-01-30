@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import GoogleLogo from "@/components/logos/google";
 
 export default async function Signup(props: {
   searchParams: Promise<Message>;
@@ -66,14 +67,24 @@ export default async function Signup(props: {
             >
               Create account
             </SubmitButton>
-            <SubmitButton
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">
+                  OR
+                </span>
+              </div>
+            </div>
+            <Button
               className="w-full"
               variant="outline"
-              pendingText="Redirecting to Google..."
-              formAction={signInWithGoogleAction}
+              onClick={signInWithGoogleAction}
             >
-              Sign up with Google
-            </SubmitButton>
+              <GoogleLogo className="mr-2 h-4 w-4" />
+              Continue with Google
+            </Button>
             <FormMessage message={searchParams} />
           </form>
         </CardContent>
