@@ -2,6 +2,7 @@ import HeaderAuth from "@/components/header";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import Providers from "./providers";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -28,11 +29,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="min-h-screen flex flex-col items-center">
-            <HeaderAuth />
-            {children}
-          </main>
-          <Toaster />
+          <Providers>
+            <main className="min-h-screen flex flex-col items-center">
+              <HeaderAuth />
+              {children}
+            </main>
+            <Toaster />
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
