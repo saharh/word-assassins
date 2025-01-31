@@ -28,24 +28,6 @@ function GameButtons() {
   );
 }
 
-async function getGames(userId: string) {
-  return await prisma.game.findMany({
-    where: {
-      players: {
-        some: {
-          userId: userId,
-        },
-      },
-    },
-    include: {
-      players: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-}
-
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
@@ -56,14 +38,30 @@ export default async function DashboardPage() {
     redirect("/sign-in");
   }
 
-  const games = await getGames(user.id);
+  const games = await prisma.game.findMany({
+    where: {
+      players: {
+        some: {
+          userId: user.id,
+        },
+      },
+    },
+    include: {
+      players: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center mb-8">
         <h1 className="text-4xl font-bold">Your Games</h1>
       </div>
-
+      <div className="mb-8 sm:mb-12 max-w-md mx-auto">
+        <GameButtons />
+      </div>
       {games.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 px-4">
           <h2 className="text-2xl font-bold text-center mb-4">No Games Yet!</h2>
@@ -131,9 +129,6 @@ export default async function DashboardPage() {
                 </Card>
               </Link>
             ))}
-          </div>
-          <div className="mt-12 max-w-md mx-auto">
-            <GameButtons />
           </div>
         </>
       )}
