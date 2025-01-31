@@ -44,6 +44,7 @@ model PlayerInGame {
   targetId   String?
   target     PlayerInGame?  @relation("PlayerTarget", fields: [targetId], references: [id])
   targetedBy PlayerInGame[] @relation("PlayerTarget")
+  redraws    Int            @default(0)
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
 

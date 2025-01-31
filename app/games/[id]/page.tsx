@@ -8,6 +8,7 @@ import { GameStatus, PlayerStatus } from "@prisma/client";
 import { GameStatusBadge } from "@/components/game-status-badge";
 import MarkAsKilledButton from "./mark-as-killed-button";
 import { AnimatedCrown } from "./animated-crown";
+import RedrawWordButton from "./redraw-word-button";
 
 export default async function GamePage({
   params,
@@ -110,8 +111,15 @@ export default async function GamePage({
             <CardHeader>
               <CardTitle>Actions</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="sm:items-center gap-4 flex sm:flex-row flex-col">
               <MarkAsKilledButton gameId={game.id} />
+              <RedrawWordButton
+                gameId={game.id}
+                redraws={currentPlayer.redraws}
+                redrawsAllowed={
+                  !game.players.some((p) => p.status === PlayerStatus.DEAD)
+                }
+              />
             </CardContent>
           </Card>
         )}
