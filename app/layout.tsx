@@ -4,11 +4,21 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import Providers from "./providers";
 import { Footer } from "@/components/footer";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
@@ -18,8 +28,15 @@ export const metadata: Metadata = {
   },
   description:
     "Word Assassins is a social deduction game where players use secret words to eliminate each other. Perfect for friends, parties, and social gatherings.",
-  keywords: ["word game", "social deduction", "party game", "multiplayer"],
-  creator: "Ayush Goyal",
+  keywords: [
+    "word game",
+    "social deduction",
+    "party game",
+    "online game",
+    "multiplayer",
+  ],
+  creator: "Word Assassins",
+  publisher: "Word Assassins",
   formatDetection: {
     email: false,
     address: false,
