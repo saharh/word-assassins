@@ -135,14 +135,14 @@ export default function LandingPage() {
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-200px" }}
+        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
         transition={{ duration: 0.8 }}
         className="py-16 mb-6 sm:mb-20"
       >
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           transition={{ duration: 0.5 }}
           className="text-3xl font-bold text-center mb-4"
         >
@@ -151,7 +151,7 @@ export default function LandingPage() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto"
         >
@@ -161,7 +161,7 @@ export default function LandingPage() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
