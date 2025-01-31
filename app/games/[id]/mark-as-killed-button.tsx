@@ -17,10 +17,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { BloodSplatter } from "./blood-splatter";
 
 export default function MarkAsKilledButton({ gameId }: { gameId: string }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showBloodSplatter, setShowBloodSplatter] = useState(false);
   const toast = useToast();
 
   const { mutate: markAsKilled } = useMutation({
@@ -30,6 +32,10 @@ export default function MarkAsKilledButton({ gameId }: { gameId: string }) {
     },
     onMutate: () => {
       setIsLoading(true);
+      setShowBloodSplatter(true);
+      setTimeout(() => {
+        setShowBloodSplatter(false);
+      }, 5000);
     },
     onSuccess: () => {
       toast.toast({
@@ -52,30 +58,33 @@ export default function MarkAsKilledButton({ gameId }: { gameId: string }) {
   });
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive" disabled={isLoading}>
-          {isLoading ? "Marking as killed..." : "Mark Yourself as Killed"}
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will mark you as killed and
-            remove you from the game.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => markAsKilled()}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            Yes, mark as killed
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+      <BloodSplatter show={showBloodSplatter} />
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="destructive" disabled={isLoading}>
+            {isLoading ? "Marking as killed..." : "Mark Yourself as Killed"}
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will mark you as killed and
+              remove you from the game.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => markAsKilled()}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Yes, mark as killed
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
