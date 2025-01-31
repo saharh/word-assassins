@@ -139,7 +139,7 @@ export default async function GamePage({
                     {player.gameWinner && <AnimatedCrown />}
                     {player.userId === game.creatorId && (
                       <Badge variant="secondary" className="text-xs">
-                        Creator
+                        Host
                       </Badge>
                     )}
                     {game.status === GameStatus.ACTIVE && (
