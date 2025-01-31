@@ -6,6 +6,17 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useMutation } from "react-query";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function MarkAsKilledButton({ gameId }: { gameId: string }) {
   const router = useRouter();
@@ -41,12 +52,30 @@ export default function MarkAsKilledButton({ gameId }: { gameId: string }) {
   });
 
   return (
-    <Button
-      variant="destructive"
-      onClick={() => markAsKilled()}
-      disabled={isLoading}
-    >
-      {isLoading ? "Marking as killed..." : "Mark Yourself as Killed"}
-    </Button>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive" disabled={isLoading}>
+          {isLoading ? "Marking as killed..." : "Mark Yourself as Killed"}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will mark you as killed and
+            remove you from the game.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => markAsKilled()}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            Yes, mark as killed
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
