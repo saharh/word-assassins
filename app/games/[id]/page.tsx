@@ -9,6 +9,7 @@ import { GameStatusBadge } from "@/components/game-status-badge";
 import MarkAsKilledButton from "./mark-as-killed-button";
 import { AnimatedCrown } from "./animated-crown";
 import RedrawWordButton from "./redraw-word-button";
+import { Sword } from "lucide-react";
 
 export default async function GamePage({
   params,
@@ -160,6 +161,15 @@ export default async function GamePage({
                         className="text-xs"
                       >
                         {player.status}
+                      </Badge>
+                    )}
+                    {game.status !== GameStatus.WAITING && (
+                      <Badge
+                        variant="secondary"
+                        className="text-xs flex items-center gap-1"
+                      >
+                        <Sword className="w-3 h-3" />
+                        {player.kills} {player.kills === 1 ? "Kill" : "Kills"}
                       </Badge>
                     )}
                   </div>

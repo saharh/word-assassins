@@ -84,6 +84,11 @@ export async function POST(
         where: { id: dyingPlayer.id },
         data: { status: PlayerStatus.DEAD, targetId: null },
       });
+      // Increment the killer's kills
+      await tx.playerInGame.update({
+        where: { id: killer.id },
+        data: { kills: { increment: 1 } },
+      });
 
       // If the dying player's target would be the killer, they're the last one standing
       if (dyingPlayer.target?.id === killer.id) {
