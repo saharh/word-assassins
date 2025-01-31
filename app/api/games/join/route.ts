@@ -71,8 +71,15 @@ export async function POST(request: Request) {
         }
       );
     }
+    if (game.players.length >= 100) {
+      return NextResponse.json(
+        { error: "Game has reached maximum capacity of 100 players" },
+        {
+          status: 400,
+        }
+      );
+    }
 
-    // Add user to the game
     await prisma.playerInGame.create({
       data: {
         userId: user.id,
