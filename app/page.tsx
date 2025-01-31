@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/use-auth";
 
 const cardVariants = {
   initial: { opacity: 0, y: 20 },
@@ -29,6 +30,8 @@ const cardVariants = {
 };
 
 export default function LandingPage() {
+  const { user } = useAuth();
+
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] mx-6 max-w-screen-xl">
       {/* Hero Section */}
@@ -64,8 +67,9 @@ export default function LandingPage() {
             className="flex flex-col gap-4 justify-center items-center"
           >
             <Button size="lg" asChild>
-              <Link href="/sign-up" className="gap-2">
-                Start Playing <ArrowRight className="w-5 h-5" />
+              <Link href={user ? "/dashboard" : "/sign-up"} className="gap-2">
+                {user ? "Go to Dashboard" : "Start Playing"}
+                <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
           </motion.div>
