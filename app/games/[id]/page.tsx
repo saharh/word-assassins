@@ -137,45 +137,47 @@ export default async function GamePage({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {game.players.map((player) => (
-              <div
-                key={player.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium">{player.name}</p>
-                    {player.gameWinner && <AnimatedCrown />}
-                    {player.userId === game.creatorId && (
-                      <Badge variant="secondary" className="text-xs">
-                        Host
-                      </Badge>
-                    )}
-                    {game.status === GameStatus.ACTIVE && (
-                      <Badge
-                        variant={
-                          player.status === PlayerStatus.ALIVE
-                            ? "default"
-                            : "destructive"
-                        }
-                        className="text-xs"
-                      >
-                        {player.status}
-                      </Badge>
-                    )}
-                    {game.status !== GameStatus.WAITING && (
-                      <Badge
-                        variant="secondary"
-                        className="text-xs flex items-center gap-1"
-                      >
-                        <Sword className="w-3 h-3" />
-                        {player.kills} {player.kills === 1 ? "Kill" : "Kills"}
-                      </Badge>
-                    )}
+            {game.players
+              .sort((a, b) => (a.status === PlayerStatus.ALIVE ? -1 : 1))
+              .map((player) => (
+                <div
+                  key={player.id}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{player.name}</p>
+                      {player.gameWinner && <AnimatedCrown />}
+                      {player.userId === game.creatorId && (
+                        <Badge variant="secondary" className="text-xs">
+                          Host
+                        </Badge>
+                      )}
+                      {game.status === GameStatus.ACTIVE && (
+                        <Badge
+                          variant={
+                            player.status === PlayerStatus.ALIVE
+                              ? "default"
+                              : "destructive"
+                          }
+                          className="text-xs"
+                        >
+                          {player.status}
+                        </Badge>
+                      )}
+                      {game.status !== GameStatus.WAITING && (
+                        <Badge
+                          variant="secondary"
+                          className="text-xs flex items-center gap-1"
+                        >
+                          <Sword className="w-3 h-3" />
+                          {player.kills} {player.kills === 1 ? "Kill" : "Kills"}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </CardContent>
       </Card>
