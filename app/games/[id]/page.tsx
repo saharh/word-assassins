@@ -10,6 +10,7 @@ import MarkAsKilledButton from "./mark-as-killed-button";
 import { AnimatedCrown } from "./animated-crown";
 import RedrawWordButton from "./redraw-word-button";
 import { Sword } from "lucide-react";
+import ReplayGameDialog from "./replay-game-dialog";
 
 export default async function GamePage({
   params,
@@ -66,6 +67,9 @@ export default async function GamePage({
         <div className="flex gap-3">
           {isCreator && game.status === GameStatus.WAITING && (
             <StartGameButton gameId={game.id} />
+          )}
+          {isCreator && game.status === GameStatus.FINISHED && (
+            <ReplayGameDialog gameId={game.id} gameName={game.name} />
           )}
         </div>
       </div>

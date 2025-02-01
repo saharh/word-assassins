@@ -1,10 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { customAlphabet } from "nanoid";
-
-const CUSTOM_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Letters + Numbers
-const generateGameCode = customAlphabet(CUSTOM_ALPHABET, 4);
+import { generateGameCode } from "../utils";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
