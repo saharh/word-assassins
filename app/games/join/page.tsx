@@ -88,6 +88,9 @@ export default function JoinGamePage() {
                         placeholder="Enter 4-digit code"
                         {...field}
                         autoComplete="off"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        spellCheck="false"
                         onChange={(e) => {
                           const value = e.target.value
                             .toUpperCase()
@@ -112,6 +115,8 @@ export default function JoinGamePage() {
                         placeholder="Enter your name"
                         {...field}
                         autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck="false"
                       />
                     </FormControl>
                     <FormMessage />

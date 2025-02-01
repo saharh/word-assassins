@@ -100,6 +100,8 @@ export default function CreateGamePage() {
                         placeholder="Enter your name"
                         {...field}
                         autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck="false"
                       />
                     </FormControl>
                     <FormMessage />
