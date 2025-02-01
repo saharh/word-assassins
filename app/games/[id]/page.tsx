@@ -11,6 +11,7 @@ import { AnimatedCrown } from "./animated-crown";
 import RedrawWordButton from "./redraw-word-button";
 import { Sword } from "lucide-react";
 import ReplayGameDialog from "./replay-game-dialog";
+import { RemovePlayerButton } from "./remove-player-button";
 
 export default async function GamePage({
   params,
@@ -180,6 +181,13 @@ export default async function GamePage({
                       )}
                     </div>
                   </div>
+                  {game.status === GameStatus.WAITING && isCreator && (
+                    <RemovePlayerButton
+                      gameId={game.id}
+                      playerId={player.userId}
+                      currentPlayerId={currentPlayer?.userId}
+                    />
+                  )}
                 </div>
               ))}
           </div>
