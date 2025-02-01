@@ -27,7 +27,10 @@ import { Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  joinCode: z.string().length(4, "Join code must be exactly 4 characters"),
+  joinCode: z
+    .string()
+    .length(4, "Join code must be exactly 4 characters")
+    .regex(/^[A-Z0-9]+$/, "Only letters and numbers are allowed"),
   playerName: z.string().min(2, "Name must be at least 2 characters"),
 });
 
@@ -85,6 +88,13 @@ export default function JoinGamePage() {
                         placeholder="Enter 4-digit code"
                         {...field}
                         autoComplete="off"
+                        onChange={(e) => {
+                          const value = e.target.value
+                            .toUpperCase()
+                            .replace(/[^A-Z0-9]/g, "");
+                          field.onChange(value);
+                        }}
+                        maxLength={4}
                       />
                     </FormControl>
                     <FormMessage />
