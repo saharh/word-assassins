@@ -5,7 +5,7 @@ import { GameStatus } from "@prisma/client";
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
   const {
@@ -21,7 +21,7 @@ export async function POST(
     );
   }
 
-  const { id } = params;
+  const { id } = await params;
   const { playerId } = await request.json();
 
   if (!playerId || typeof playerId !== "string") {
