@@ -206,10 +206,12 @@ export default async function GamePage({
               <div key={index} className="space-y-3">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`h-8 w-8 rounded-lg ${instruction.bgClassName} flex items-center justify-center`}
+                    className="h-8 w-8 rounded-lg flex items-center justify-center opacity-80"
+                    style={{ backgroundColor: instruction.bgClassName }}
                   >
                     <instruction.icon
-                      className={`h-4 w-4 ${instruction.iconClassName}`}
+                      className="h-4 w-4"
+                      style={{ color: instruction.iconClassName }}
                     />
                   </div>
                   <h3 className="font-semibold">{instruction.title}</h3>

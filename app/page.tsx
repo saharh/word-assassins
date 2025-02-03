@@ -169,10 +169,12 @@ export default function LandingPage() {
               <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`h-10 w-10 rounded-lg ${instruction.bgClassName} flex items-center justify-center`}
+                    className="h-10 w-10 rounded-lg flex items-center justify-center opacity-80"
+                    style={{ backgroundColor: instruction.bgClassName }}
                   >
                     <instruction.icon
-                      className={`h-5 w-5 ${instruction.iconClassName}`}
+                      className="h-5 w-5"
+                      style={{ color: instruction.iconClassName }}
                     />
                   </div>
                   <h3 className="text-lg font-semibold">{instruction.title}</h3>
