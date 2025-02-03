@@ -2,21 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Shield,
-  Target,
-  Users,
-  Play,
-  Skull,
-  Crown,
-  Book,
-  Coffee,
-  MessageSquare,
-} from "lucide-react";
+import { ArrowRight, Shield, Target, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
+import { GAME_INSTRUCTIONS } from "@/lib/game-instructions";
 
 const cardVariants = {
   initial: { opacity: 0, y: 20 },
@@ -169,130 +159,42 @@ export default function LandingPage() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
-          {/* Getting Started */}
-          <motion.div
-            variants={cardVariants}
-            whileHover="hover"
-            className="group"
-          >
-            <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Play className="h-5 w-5 text-primary" />
+          {GAME_INSTRUCTIONS.map((instruction, index) => (
+            <motion.div
+              key={index}
+              variants={cardVariants}
+              whileHover="hover"
+              className="group"
+            >
+              <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`h-10 w-10 rounded-lg ${instruction.bgClassName} flex items-center justify-center`}
+                  >
+                    <instruction.icon
+                      className={`h-5 w-5 ${instruction.iconClassName}`}
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold">{instruction.title}</h3>
                 </div>
-                <h3 className="text-lg font-semibold">Getting Started</h3>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                One player creates a game and shares the invite link. Once
-                everyone's in, the creator hits "start" and each player gets a
-                secret word and target.
-              </p>
-            </Card>
-          </motion.div>
-
-          {/* Making a Kill */}
-          <motion.div
-            variants={cardVariants}
-            whileHover="hover"
-            className="group"
-          >
-            <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-destructive/10 flex items-center justify-center">
-                  <Skull className="h-5 w-5 text-destructive" />
-                </div>
-                <h3 className="text-lg font-semibold">Making a Kill</h3>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                When your target says their word, show them your screen as
-                proof. They'll mark themselves as dead, and you'll get their
-                target as your next mission.
-              </p>
-            </Card>
-          </motion.div>
-
-          {/* Winning */}
-          <motion.div
-            variants={cardVariants}
-            whileHover="hover"
-            className="group"
-          >
-            <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-yellow-500/10 flex items-center justify-center">
-                  <Crown className="h-5 w-5 text-yellow-500" />
-                </div>
-                <h3 className="text-lg font-semibold">Winning</h3>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                Keep assassinating targets until you're the last one standing.
-                The final survivor wins the game!
-              </p>
-            </Card>
-          </motion.div>
-
-          {/* Word Rules */}
-          <motion.div
-            variants={cardVariants}
-            whileHover="hover"
-            className="group"
-          >
-            <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                  <Book className="h-5 w-5 text-blue-500" />
-                </div>
-                <h3 className="text-lg font-semibold">Word Rules</h3>
-              </div>
-              <ul className="text-muted-foreground text-sm space-y-2">
-                <li>• Homophones count (e.g., "two" = "to")</li>
-                <li>• Plurals count (e.g., "shoe" = "shoes")</li>
-                <li>• Accidents still count!</li>
-              </ul>
-            </Card>
-          </motion.div>
-
-          {/* Strategy Tips */}
-          <motion.div
-            variants={cardVariants}
-            whileHover="hover"
-            className="group"
-          >
-            <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                  <Coffee className="h-5 w-5 text-green-500" />
-                </div>
-                <h3 className="text-lg font-semibold">Strategy Tips</h3>
-              </div>
-              <ul className="text-muted-foreground text-sm space-y-2">
-                <li>• You can say your target's word</li>
-                <li>• Get help from other players</li>
-                <li>• Be patient - kills take time!</li>
-              </ul>
-            </Card>
-          </motion.div>
-
-          {/* Fair Play */}
-          <motion.div
-            variants={cardVariants}
-            whileHover="hover"
-            className="group"
-          >
-            <Card className="p-6 space-y-4 transition-shadow duration-200 hover:shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                  <MessageSquare className="h-5 w-5 text-purple-500" />
-                </div>
-                <h3 className="text-lg font-semibold">Fair Play</h3>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                You can lie about your target and word, but never lie about
-                killing someone. When you're dead, mark yourself dead right
-                away.
-              </p>
-            </Card>
-          </motion.div>
+                {instruction.isList ? (
+                  <ul className="text-muted-foreground text-sm space-y-2">
+                    {Array.isArray(instruction.description) ? (
+                      instruction.description.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))
+                    ) : (
+                      <li>{instruction.description}</li>
+                    )}
+                  </ul>
+                ) : (
+                  <p className="text-muted-foreground text-sm">
+                    {instruction.description}
+                  </p>
+                )}
+              </Card>
+            </motion.div>
+          ))}
         </motion.div>
       </motion.section>
     </div>
