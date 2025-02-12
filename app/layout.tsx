@@ -5,6 +5,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { Footer } from "@/components/footer";
 import { Metadata, Viewport } from "next";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -126,6 +127,7 @@ export default function RootLayout({
           </Providers>
         </ThemeProvider>
       </body>
+      <GoogleAnalytics gaId="G-W0EW2S50XE" />
     </html>
   );
 }
