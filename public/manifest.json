@@ -1,0 +1,9 @@
+{
+  "name": "Word Assassins",
+  "short_name": "Word Assassins",
+  "description": "A Social Deduction Game",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
+}
