@@ -35,7 +35,7 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/sign-in");
+    redirect(`/sign-in?redirectTo=/dashboard`);
   }
 
   const games = await prisma.game.findMany({
@@ -59,9 +59,6 @@ export default async function DashboardPage() {
       <div className="flex items-center mb-8">
         <h1 className="text-4xl font-bold">Your Games</h1>
       </div>
-      <div className="mb-8 sm:mb-12 max-w-md mx-auto">
-        <GameButtons />
-      </div>
       {games.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 px-4">
           <h2 className="text-2xl font-bold text-center mb-4">No Games Yet!</h2>
@@ -75,6 +72,9 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <>
+          <div className="mb-8 sm:mb-12 max-w-md mx-auto">
+            <GameButtons />
+          </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {games.map((game) => (
               <Link href={`/games/${game.id}`} key={game.id}>

@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function Layout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ export default async function Layout({
   } = await supabase.auth.getUser();
 
   if (user) {
-    redirect("/");
+    redirect("/dashboard");
   }
 
   return (

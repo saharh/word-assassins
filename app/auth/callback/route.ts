@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: Request) {
   // The `/auth/callback` route is required for the server-side auth flow implemented
@@ -7,13 +8,15 @@ export async function GET(request: Request) {
   // https://supabase.com/docs/guides/auth/server-side/nextjs
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const origin = requestUrl.origin;
-  // const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
 
   if (code) {
     const supabase = await createClient();
     await supabase.auth.exchangeCodeForSession(code);
+
+    revalidatePath("/");
   }
 
-  return NextResponse.redirect(`${origin}/dashboard`);
+  const origin = requestUrl.origin;
+  const redirectTo = requestUrl.searchParams.get("redirectTo") || "/dashboard";
+  return NextResponse.redirect(`${origin}${redirectTo}`);
 }

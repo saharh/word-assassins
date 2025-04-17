@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "react-query";
 import axios from "axios";
-import { useAuth } from "@/hooks/use-auth";
 
 interface RemovePlayerButtonProps {
   gameId: string;

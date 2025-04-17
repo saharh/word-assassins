@@ -5,7 +5,6 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "react-query";
 import axios from "axios";
-import { revalidatePath } from "next/cache";
 
 export default function StartGameButton({ gameId }: { gameId: string }) {
   const { toast } = useToast();

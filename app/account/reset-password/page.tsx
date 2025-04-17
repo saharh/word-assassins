@@ -1,6 +1,6 @@
-import { resetPasswordAction } from "@/app/(auth-pages)/actions";
-import { FormMessage, Message } from "@/components/form-message";
-import { SubmitButton } from "@/components/submit-button";
+"use client";
+
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -9,12 +9,73 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
-export default async function ResetPassword(props: {
-  searchParams: Promise<Message>;
-}) {
-  const searchParams = await props.searchParams;
+const resetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .max(100, "Password must be less than 100 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export default function ResetPassword() {
+  const router = useRouter();
+
+  const form = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const { isSubmitting } = form.formState;
+
+  const handleResetPassword = async (
+    values: z.infer<typeof resetPasswordSchema>
+  ) => {
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.updateUser({
+      password: values.password,
+    });
+
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to reset password",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Your password has been reset successfully",
+        variant: "default",
+      });
+      router.push("/dashboard");
+    }
+  };
+
   return (
     <div className="w-full h-full flex flex-1 items-center justify-center">
       <Card className="w-full max-w-md mx-4">
@@ -25,36 +86,59 @@ export default async function ResetPassword(props: {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="flex flex-col gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="password">New password</Label>
-              <Input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter new password"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="confirmPassword">Confirm password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm your password"
-                required
-              />
-            </div>
-            <SubmitButton
-              className="w-full"
-              pendingText="Resetting password..."
-              formAction={resetPasswordAction}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleResetPassword)}
+              className="flex flex-col gap-4"
             >
-              Reset password
-            </SubmitButton>
-            <FormMessage message={searchParams} />
-          </form>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>New password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter new password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Confirm your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Resetting password...
+                  </>
+                ) : (
+                  "Reset password"
+                )}
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

@@ -1,4 +1,3 @@
-import { signOutAction } from "@/app/(auth-pages)/actions";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { createClient } from "@/utils/supabase/server";
 import { Button } from "./ui/button";
@@ -11,6 +10,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+async function signOutAction() {
+  "use server";
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  revalidatePath("/");
+  redirect("/sign-in");
+}
 
 export default async function Header() {
   const supabase = await createClient();
