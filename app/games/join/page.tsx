@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,6 +25,7 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import { Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   joinCode: z
@@ -37,6 +38,9 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function JoinGamePage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,7 +48,19 @@ export default function JoinGamePage() {
       playerName: "",
     },
   });
-  const router = useRouter();
+
+  // Set joinCode from URL parameter if available
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (code) {
+      const formattedCode = code
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "")
+        .slice(0, 4);
+      form.setValue("joinCode", formattedCode);
+    }
+  }, [searchParams, form]);
+
   const { mutate: joinGame, isLoading } = useMutation({
     mutationFn: (data: any) => {
       return axios.post("/api/games/join", data);

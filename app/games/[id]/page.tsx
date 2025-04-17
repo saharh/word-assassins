@@ -13,6 +13,7 @@ import { Sword } from "lucide-react";
 import ReplayGameDialog from "./replay-game-dialog";
 import { RemovePlayerButton } from "./remove-player-button";
 import { GAME_INSTRUCTIONS } from "@/lib/game-instructions";
+import CopyJoinLinkButton from "./copy-join-link-button";
 
 export default async function GamePage({
   params,
@@ -60,11 +61,12 @@ export default async function GamePage({
     <div className="flex-1 w-full max-w-3xl mx-auto p-4 space-y-8 mb-3">
       <div className="flex justify-between items-center">
         <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold">{game.name}</h1>
-            <GameStatusBadge status={game.status} />
-          </div>
+          <GameStatusBadge status={game.status} />
+          <h1 className="text-3xl font-bold">{game.name}</h1>
           <p className="text-muted-foreground">Join Code: {game.joinCode}</p>
+          {game.status === GameStatus.WAITING && (
+            <CopyJoinLinkButton joinCode={game.joinCode} />
+          )}
         </div>
         <div className="flex gap-3">
           {isCreator && game.status === GameStatus.WAITING && (
