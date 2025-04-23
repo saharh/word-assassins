@@ -18,23 +18,34 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Game, PlayerInGame, PlayerStatus } from "@prisma/client";
+
+type GameWithPlayers = Game & {
+  players: PlayerInGame[];
+};
 
 export default function RedrawWordButton({
-  gameId,
-  redraws,
-  redrawsAllowed,
+  game,
+  currentPlayer,
 }: {
-  gameId: string;
-  redraws: number;
-  redrawsAllowed: boolean;
+  game: GameWithPlayers;
+  currentPlayer: PlayerInGame;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
+  const redraws = currentPlayer.redraws;
+  const remainingRedraws = 2 - redraws;
+
+  const anyPlayersDead = game.players.some(
+    (p) => p.status === PlayerStatus.DEAD
+  );
+  const redrawsAllowed = game.redrawsAlwaysAllowed || !anyPlayersDead;
+
   const { mutate: redrawWord } = useMutation({
     mutationFn: async () => {
-      const response = await axios.post(`/api/games/${gameId}/redraw`);
+      const response = await axios.post(`/api/games/${game.id}/redraw`);
       return response.data;
     },
     onMutate: () => {
@@ -60,8 +71,6 @@ export default function RedrawWordButton({
     },
   });
 
-  const remainingRedraws = 2 - redraws;
-
   const getButtonText = () => {
     if (isLoading) return "Redrawing...";
     if (!redrawsAllowed) return "Redraws locked";
@@ -74,6 +83,22 @@ export default function RedrawWordButton({
         </Badge>
       </>
     );
+  };
+
+  const getDialogDescription = () => {
+    if (remainingRedraws <= 0) {
+      return `You have used all your redraws for this game.`;
+    }
+
+    if (!redrawsAllowed) {
+      return `Sorry, you can't redraw your word right now.`;
+    }
+
+    if (game.redrawsAlwaysAllowed) {
+      return `This will select a new random word for your target. You can only do this ${remainingRedraws} more ${remainingRedraws === 1 ? "time" : "times"}.`;
+    } else {
+      return `This will select a new random word for your target. You can only do this ${remainingRedraws} more ${remainingRedraws === 1 ? "time" : "times"}, and only before any kills have occurred in the game.`;
+    }
   };
 
   return (
@@ -90,10 +115,7 @@ export default function RedrawWordButton({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will select a new random word for your target. You can only do
-            this {remainingRedraws} more{" "}
-            {remainingRedraws === 1 ? "time" : "times"}, and only before any
-            kills have occurred in the game.
+            {getDialogDescription()}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

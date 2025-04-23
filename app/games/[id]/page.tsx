@@ -122,13 +122,7 @@ export default async function GamePage({
             </CardHeader>
             <CardContent className="sm:items-center gap-4 flex sm:flex-row flex-col">
               <MarkAsKilledButton gameId={game.id} />
-              <RedrawWordButton
-                gameId={game.id}
-                redraws={currentPlayer.redraws}
-                redrawsAllowed={
-                  !game.players.some((p) => p.status === PlayerStatus.DEAD)
-                }
-              />
+              <RedrawWordButton game={game} currentPlayer={currentPlayer} />
             </CardContent>
           </Card>
         )}

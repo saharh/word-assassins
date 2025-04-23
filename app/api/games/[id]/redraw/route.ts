@@ -90,7 +90,7 @@ export async function POST(
     const anyPlayersDead = game.players.some(
       (p) => p.status === PlayerStatus.DEAD
     );
-    if (anyPlayersDead) {
+    if (anyPlayersDead && !game.redrawsAlwaysAllowed) {
       return NextResponse.json(
         { error: "Cannot redraw after kills have occurred" },
         {
