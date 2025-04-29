@@ -6,10 +6,7 @@ import Providers from "./providers";
 import { Footer } from "@/components/footer";
 import { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
-
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+import { BASE_URL } from "@/lib/utils";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -22,7 +19,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(defaultUrl),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: "Word Assassins - A Social Deduction Game",
     template: "%s | Word Assassins",
@@ -65,7 +62,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: defaultUrl,
+    url: BASE_URL,
     title: "Word Assassins - A Social Deduction Game",
     description:
       "Word Assassins is a social deduction game where players use secret words to eliminate each other. Perfect for friends, parties, and social gatherings.",
