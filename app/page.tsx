@@ -1,10 +1,10 @@
-"use client";
-
-import { Shield, Target, Users } from "lucide-react";
+import { ArrowRight, Shield, Target, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import * as motion from "motion/react-client";
 import { GAME_INSTRUCTIONS } from "@/lib/game-instructions";
-import CTAButton from "@/components/cta-button";
+import { createClient } from "@/utils/supabase/server";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const cardVariants = {
   initial: { opacity: 0, y: 20 },
@@ -17,7 +17,12 @@ const cardVariants = {
   },
 };
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] mx-6 max-w-screen-xl">
       {/* Hero Section */}
@@ -52,7 +57,12 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col gap-4 justify-center items-center"
           >
-            <CTAButton />
+            <Button size="lg" asChild>
+              <Link href={user ? "/dashboard" : "/sign-up"} className="gap-2">
+                Start Playing
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </Button>
           </motion.div>
         </div>
       </motion.section>

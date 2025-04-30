@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Latest news, updates, and stories from our team",
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
   const posts = getAllPosts();
 
   return (

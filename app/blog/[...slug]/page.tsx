@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { getPostBySlug, getAllPostSlugs } from "@/lib/blog";
 import {
   ChevronLeft,
@@ -13,9 +13,9 @@ import {
   Shield,
   MessageSquare,
   Swords,
+  ArrowRight,
 } from "lucide-react";
 import Markdown from "react-markdown";
-import CTAButton from "@/components/cta-button";
 
 export const dynamic = "force-dynamic";
 
@@ -108,7 +108,12 @@ export default async function PostPage({ params }: PostPageProps) {
             and vocabulary. Eliminate your targets, stay alive, and become the
             last assassin standing.
           </p>
-          <CTAButton />
+          <Button size="lg" asChild>
+            <Link href="/sign-up" className="gap-2">
+              Start Playing
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </Button>
         </div>
       </div>
 
