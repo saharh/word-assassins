@@ -1,3 +1,5 @@
+"use client";
+
 import { Shield, Target, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
