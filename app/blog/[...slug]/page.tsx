@@ -18,9 +18,9 @@ import Markdown from "react-markdown";
 import CTAButton from "@/components/cta-button";
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 }
 
 function formatAuthors(authors: string[]): string {
@@ -33,8 +33,9 @@ function formatAuthors(authors: string[]): string {
   return `${otherAuthors}, and ${lastAuthor}`;
 }
 
-export default function PostPage({ params }: PostPageProps) {
-  const post = getPostBySlug(params.slug);
+export default async function PostPage({ params }: PostPageProps) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
 
   if (!post) {
     notFound();
@@ -128,7 +129,8 @@ export default function PostPage({ params }: PostPageProps) {
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
-  const post = getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
 
   if (!post) {
     return {};
