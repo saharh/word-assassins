@@ -92,9 +92,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // JSON-LD for SEO (https://developers.google.com/search/docs/appearance/site-names)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Word Assassins",
+    url: BASE_URL,
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="bg-background text-foreground min-h-screen overflow-x-hidden">
         <ThemeProvider
           attribute="class"
