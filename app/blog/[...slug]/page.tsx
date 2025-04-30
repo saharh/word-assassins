@@ -17,6 +17,8 @@ import {
 import Markdown from "react-markdown";
 import CTAButton from "@/components/cta-button";
 
+export const dynamic = "force-dynamic";
+
 interface PostPageProps {
   params: Promise<{
     slug: string[];
