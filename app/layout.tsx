@@ -6,7 +6,6 @@ import Providers from "./providers";
 import { Footer } from "@/components/footer";
 import { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { BASE_URL } from "@/lib/utils";
 
 export const viewport: Viewport = {
   themeColor: [
@@ -19,7 +18,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
   title: {
     default: "Word Assassins - A Social Deduction Game",
     template: "%s | Word Assassins",
@@ -62,14 +61,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: BASE_URL,
+    url: process.env.NEXT_PUBLIC_SITE_URL,
     title: "Word Assassins - A Social Deduction Game",
     description:
       "Word Assassins is a social deduction game where players use secret words to eliminate each other. Perfect for friends, parties, and social gatherings.",
     siteName: "Word Assassins",
     images: [
       {
-        url: `${BASE_URL}/opengraph-image`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: "Word Assassins - A Social Deduction Game",
@@ -81,7 +80,7 @@ export const metadata: Metadata = {
     title: "Word Assassins - A Social Deduction Game",
     description:
       "Word Assassins is a social deduction game where players use secret words to eliminate each other.",
-    images: [`${BASE_URL}/opengraph-image`],
+    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image`],
   },
   robots: {
     index: true,
@@ -106,7 +105,7 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Word Assassins",
-    url: BASE_URL,
+    url: process.env.NEXT_PUBLIC_SITE_URL,
   };
 
   return (
