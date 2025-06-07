@@ -31,7 +31,7 @@ module.exports = {
       ref: 'origin/main',
       repo: 'https://github.com/saharh/word-assassins.git',
       path: '/var/node/word-assassins-server',
-      'post-deploy': 'npm install && pm2 startOrRestart pm2.config.cjs --env production'
+      'post-deploy': 'npm install && npm build && pm2 startOrRestart pm2.config.cjs --env production'
     },
   },
 };
