@@ -64,7 +64,7 @@ export async function POST(
 
     // Assign random words and targets to each player
     const players = game.players;
-    const words = getRandomWords(players.length);
+    const words = getRandomWords(players.length, game.customWordsList);
     const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
 
     // Create a circular chain of targets

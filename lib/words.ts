@@ -1,8 +1,10 @@
 import _ from "lodash";
 import { WORD_LIST } from "./master-word-list";
 
-export function getRandomWords(count: number): string[] {
-  return _.shuffle(WORD_LIST).slice(0, count);
+export function getRandomWords(count: number, customWordList : string[] | null): string[] {
+  // Use the custom word list if available, otherwise use the default
+  const wordSource = customWordList || WORD_LIST;
+  return _.shuffle(wordSource).slice(0, count);
 }
 
 export function assignTargets<T>(items: T[]): Map<T, T> {

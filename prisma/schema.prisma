@@ -29,6 +29,8 @@ model Game {
   winnerId             String?        @unique
   winner               PlayerInGame?  @relation("GameWinner", fields: [winnerId], references: [id])
   redrawsAlwaysAllowed Boolean        @default(false)
+  useCustomWords       Boolean        @default(false)
+  customWordsList      String[]
   createdAt            DateTime       @default(now())
   updatedAt            DateTime       @updatedAt
 }

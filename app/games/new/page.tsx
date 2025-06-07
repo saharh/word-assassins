@@ -1,5 +1,5 @@
 "use client";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,8 +19,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { useMutation } from "react-query";
@@ -30,6 +32,8 @@ const formSchema = z.object({
   gameName: z.string().min(2, "Game name must be at least 2 characters"),
   playerName: z.string().min(2, "Name must be at least 2 characters"),
   redrawsAlwaysAllowed: z.boolean().default(false),
+  useCustomWordList: z.boolean().default(false),
+  customWordList: z.string().optional(),
 });
 
 export default function CreateGamePage() {
@@ -39,8 +43,13 @@ export default function CreateGamePage() {
       gameName: "",
       playerName: "",
       redrawsAlwaysAllowed: false,
+      useCustomWordList: false,
+      customWordList: "",
     },
   });
+  
+  const useCustomWordList = form.watch("useCustomWordList");
+  
   const router = useRouter();
   const { mutate: createGame, isLoading } = useMutation({
     mutationFn: (data: z.infer<typeof formSchema>) => {
@@ -135,6 +144,48 @@ export default function CreateGamePage() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="useCustomWordList"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Use custom word list</FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        If checked, the game will use your custom list of words instead of the default list.
+                      </p>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              {useCustomWordList && (
+                <FormField
+                  control={form.control}
+                  name="customWordList"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Custom Word List</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter words separated by new lines"
+                          {...field}
+                          className="min-h-[150px]"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Enter the words you want to use in your game. Separate words with new lines.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>

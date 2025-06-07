@@ -3,8 +3,9 @@ import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { getRandomWords } from "@/lib/words";
 import { GameStatus, PlayerStatus } from "@prisma/client";
+import {WORD_LIST} from "@/lib/master-word-list";
 
-const MAX_REDRAWS = 2;
+const MAX_REDRAWS = 4;
 
 export async function POST(
   request: Request,
@@ -99,7 +100,14 @@ export async function POST(
       );
     }
 
-    const newWord = getRandomWords(1)[0];
+    // Get all words currently in use by players
+    const usedWords = new Set(game.players.map(player => player.word));
+
+    const wordsList = game.customWordsList ?? WORD_LIST;
+    const nonUsedWords = wordsList.filter(word => !usedWords.has(word));
+    const legitWords = nonUsedWords.length > 0 ? nonUsedWords : wordsList;
+
+    const newWord = getRandomWords(1, legitWords)[0];
 
     await prisma.$transaction([
       prisma.playerInGame.update({
