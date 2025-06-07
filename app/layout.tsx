@@ -58,30 +58,30 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: process.env.NEXT_PUBLIC_SITE_URL,
-    title: "Word Assassins - A Social Deduction Game",
-    description:
-      "Word Assassins is a social deduction game where players use secret words to eliminate each other. Perfect for friends, parties, and social gatherings.",
-    siteName: "Word Assassins",
-    images: [
-      {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image`,
-        width: 1200,
-        height: 630,
-        alt: "Word Assassins - A Social Deduction Game",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Word Assassins - A Social Deduction Game",
-    description:
-      "Word Assassins is a social deduction game where players use secret words to eliminate each other.",
-    images: [`${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image`],
-  },
+  // openGraph: {
+  //   type: "website",
+  //   locale: "en_US",
+  //   url: process.env.NEXT_PUBLIC_SITE_URL,
+  //   title: "Word Assassins - A Social Deduction Game",
+  //   description:
+  //     "Word Assassins is a social deduction game where players use secret words to eliminate each other. Perfect for friends, parties, and social gatherings.",
+  //   siteName: "Word Assassins",
+  //   images: [
+  //     {
+  //       url: `${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image`,
+  //       width: 1200,
+  //       height: 630,
+  //       alt: "Word Assassins - A Social Deduction Game",
+  //     },
+  //   ],
+  // },
+  // twitter: {
+  //   card: "summary_large_image",
+  //   title: "Word Assassins - A Social Deduction Game",
+  //   description:
+  //     "Word Assassins is a social deduction game where players use secret words to eliminate each other.",
+  //   images: [`${process.env.NEXT_PUBLIC_SITE_URL}/opengraph-image`],
+  // },
   robots: {
     index: true,
     follow: true,

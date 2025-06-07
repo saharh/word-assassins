@@ -149,16 +149,16 @@ export async function generateMetadata({
     authors: post.authors.map((author) => ({
       name: author,
     })),
-    openGraph: {
-      title: post.title,
-      description: post.description,
-      type: "article",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.description,
-    },
+    // openGraph: {
+    //   title: post.title,
+    //   description: post.description,
+    //   type: "article",
+    // },
+    // twitter: {
+    //   card: "summary_large_image",
+    //   title: post.title,
+    //   description: post.description,
+    // },
   };
 }
 
