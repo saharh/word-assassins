@@ -36,7 +36,7 @@ export default function RedrawWordButton({
   const toast = useToast();
 
   const redraws = currentPlayer.redraws;
-  const remainingRedraws = 2 - redraws;
+  const remainingRedraws = 4 - redraws;
 
   const anyPlayersDead = game.players.some(
     (p) => p.status === PlayerStatus.DEAD
